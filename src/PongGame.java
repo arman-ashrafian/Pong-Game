@@ -2,6 +2,8 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -15,10 +17,15 @@ import javax.swing.WindowConstants;
  * @author Arman Ashrafian
  */
 public class PongGame extends JComponent implements ActionListener,
-        MouseMotionListener {
+                                                    MouseMotionListener,
+                                                    KeyListener{
 
     private static final int WINDOW_WIDTH = 2000;
     private static final int WINDOW_HEIGHT = 1800;
+    
+    private static boolean isRunning = true;
+    private static PongGame game = new PongGame();
+    private static Timer t = new Timer(10, game);
     
     // Position of paddle
     private int paddleX = 0;
@@ -29,11 +36,10 @@ public class PongGame extends JComponent implements ActionListener,
     private int ballY = 800;
 
     private int ballYSpeed = -2;
-    private int ballXSpeed = -5;
+    private int ballXSpeed = -10;
 
     public static void main(String[] args) {
         JFrame window = new JFrame("Pong Game by Arman");
-        PongGame game = new PongGame();
 
         // Window Setup
         window.add(game);
@@ -43,9 +49,8 @@ public class PongGame extends JComponent implements ActionListener,
         window.setVisible(true);
         window.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        // Action Listener
-        Timer t = new Timer(10, game);
         t.start();
+        window.addKeyListener(game);
         window.addMouseMotionListener(game);
     }
 
@@ -65,9 +70,14 @@ public class PongGame extends JComponent implements ActionListener,
     @Override
     public void actionPerformed(ActionEvent ae) {
 
-        if (ballX < paddleX + 20 && (ballY > paddleY && ballY < paddleY + 300)) {
+        if (ballX < paddleX + 20 && (ballY > paddleY && ballY < paddleY + 150)) {
             ballXSpeed = 10;
             ballYSpeed = 2;
+        }
+        if(ballX < paddleX + 20 && (ballY > paddleY && ballY > paddleY + 150
+                                                    && ballY < paddleY + 300)) {
+            ballXSpeed = 10;
+            ballYSpeed = -2;
         }
         if(ballY <= 0) {
             ballYSpeed = 2;
@@ -95,5 +105,28 @@ public class PongGame extends JComponent implements ActionListener,
     @Override
     public void mouseDragged(MouseEvent me) {
     }
+
+    @Override
+    public void keyTyped(KeyEvent ke) {
+        
+    }
+
+    @Override
+    public void keyPressed(KeyEvent ke) {
+        if(ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            isRunning = !isRunning;
+        }
+        if(ke.getKeyCode() == KeyEvent.VK_ESCAPE && isRunning == false) {
+            t.stop();
+        }
+        if(ke.getKeyCode() == KeyEvent.VK_ESCAPE && isRunning == true) {
+            t.start();
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent ke) {
+    }
+
 
 }
