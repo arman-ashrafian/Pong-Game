@@ -6,41 +6,51 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
 
 /**
- *
  * @author Arman Ashrafian
+ * 
+ * Press 'esc' to start the game
  */
 public class PongGame extends JComponent implements ActionListener,
                                                     MouseMotionListener,
-                                                    KeyListener{
+                                                    KeyListener {
 
     private static final int WINDOW_WIDTH = 2000;
     private static final int WINDOW_HEIGHT = 1800;
     
     private static int difficulty = 0;
-    private static boolean isRunning = true;
-    private static PongGame game = new PongGame();
-    private static Timer t = new Timer(5, game);
+    private static boolean isRunning = false;
     
     // Position of paddle
     private int paddleX = 0;
     private int paddleY = 700;
 
-    // Position of ball
+    // Position + Speed of ball
     private int ballX = 1600;
     private int ballY = 800;
-
     private int ballYSpeed = -2;
     private int ballXSpeed = -10;
+    
+    private static BufferedImage gameOver;
+    private static Timer t;
+    
+    public PongGame() throws IOException {
+        gameOver = ImageIO.read(getClass().getResource("gameover4.png"));
+    }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException{
         JFrame window = new JFrame("Pong Game by Arman");
-
+        PongGame game = new PongGame();
+        t = new Timer(5, game);
+        
         // Window Setup
         window.add(game);
         window.pack();
@@ -49,7 +59,6 @@ public class PongGame extends JComponent implements ActionListener,
         window.setVisible(true);
         window.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        t.start();
         window.addKeyListener(game);
         window.addMouseMotionListener(game);
     }
@@ -65,37 +74,45 @@ public class PongGame extends JComponent implements ActionListener,
         //draw ball
         g.setColor(Color.WHITE);
         g.fillOval(ballX, ballY, 75, 75);
+        
+        
+        if(ballX < paddleX - 20) {
+            g.drawImage(gameOver, 200, 400, null);
+            t.stop();
+            isRunning = false;
+        }
+        
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
         
-        if (ballX < paddleX + 20 && (ballY > paddleY - 10 && ballY < paddleY + 40)) {
+        if (ballX < paddleX + 20 && (ballY > paddleY - 15 && ballY < paddleY + 40)) {
             ballXSpeed = 10 + difficulty;
             ballYSpeed = -4;
-            difficulty++;
+            difficulty+=5;
         }
         if(ballX < paddleX + 20 && (ballY >= paddleY + 40  && ballY < paddleY + 110)) {
             ballXSpeed = 10 + difficulty;
             ballYSpeed = 3;
-            difficulty++;
+            difficulty+=5;
         }
         
         if(ballX < paddleX + 20 && (ballY >= paddleY + 110 && ballY < paddleY + 190)) {
             ballXSpeed = 10 + difficulty;
             ballYSpeed = 2;
-            difficulty++;
+            difficulty+=5;
         }
         if(ballX < paddleX + 20 && (ballY >= paddleY + 190 && ballY < paddleY + 260)) {
             ballXSpeed = 10 + difficulty;
             ballYSpeed = -3;
-            difficulty++;
+            difficulty+=5;
         }
         
         if(ballX < paddleX + 20 && (ballY >= paddleY + 260 && ballY < paddleY + 300)) {
             ballXSpeed = 10 + difficulty;
             ballYSpeed = 4;
-            difficulty++;
+            difficulty+=5;
         }
         
         if(ballY <= 0) {
@@ -110,15 +127,18 @@ public class PongGame extends JComponent implements ActionListener,
         
 
         ballX += ballXSpeed;
-        ballY += ballYSpeed;
-
+        ballY += ballYSpeed; 
+        
+        System.out.println(difficulty);
         repaint();
     }
 
     @Override
     public void mouseMoved(MouseEvent me) {
         paddleY = me.getY() - 150;
-        repaint();
+        if(isRunning) {
+            repaint();
+        }
     }
 
     @Override
