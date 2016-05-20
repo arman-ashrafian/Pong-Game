@@ -23,7 +23,7 @@ public class PongGame extends JComponent implements ActionListener,
                                                     MouseMotionListener,
                                                     KeyListener {
 
-    private static final int WINDOW_WIDTH = 2000;
+    private static final int WINDOW_WIDTH = 1700;
     private static final int WINDOW_HEIGHT = 1800;
     
     private static int difficulty = 0;
@@ -49,7 +49,7 @@ public class PongGame extends JComponent implements ActionListener,
     public static void main(String[] args) throws IOException{
         JFrame window = new JFrame("Pong Game by Arman");
         PongGame game = new PongGame();
-        t = new Timer(5, game);
+        t = new Timer(1,game);
         
         // Window Setup
         window.add(game);
@@ -76,8 +76,9 @@ public class PongGame extends JComponent implements ActionListener,
         g.fillOval(ballX, ballY, 75, 75);
         
         
-        if(ballX < paddleX - 20) {
-            g.drawImage(gameOver, 200, 400, null);
+        if(ballX < paddleX - 50) {
+            //g.drawImage(gameOver, 200, 400, null);
+            g.drawImage(gameOver, 0,0,WINDOW_WIDTH,WINDOW_WIDTH, null);
             t.stop();
             isRunning = false;
         }
@@ -90,29 +91,29 @@ public class PongGame extends JComponent implements ActionListener,
         if (ballX < paddleX + 20 && (ballY > paddleY - 15 && ballY < paddleY + 40)) {
             ballXSpeed = 10 + difficulty;
             ballYSpeed = -4;
-            difficulty+=5;
+            difficulty+=2;
         }
         if(ballX < paddleX + 20 && (ballY >= paddleY + 40  && ballY < paddleY + 110)) {
             ballXSpeed = 10 + difficulty;
             ballYSpeed = 3;
-            difficulty+=5;
+            difficulty+=2;
         }
         
         if(ballX < paddleX + 20 && (ballY >= paddleY + 110 && ballY < paddleY + 190)) {
             ballXSpeed = 10 + difficulty;
             ballYSpeed = 2;
-            difficulty+=5;
+            difficulty+=2;
         }
         if(ballX < paddleX + 20 && (ballY >= paddleY + 190 && ballY < paddleY + 260)) {
             ballXSpeed = 10 + difficulty;
             ballYSpeed = -3;
-            difficulty+=5;
+            difficulty+=2;
         }
         
         if(ballX < paddleX + 20 && (ballY >= paddleY + 260 && ballY < paddleY + 300)) {
             ballXSpeed = 10 + difficulty;
             ballYSpeed = 4;
-            difficulty+=5;
+            difficulty+=2;
         }
         
         if(ballY <= 0) {
