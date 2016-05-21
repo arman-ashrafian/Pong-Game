@@ -28,6 +28,8 @@ public class PongGame extends JComponent implements ActionListener,
     
     private static int difficulty = 0;
     private static boolean isRunning = false;
+    private static boolean isGameOver = false;
+    private static int hits = 0;
     
     // Position of paddle
     private int paddleX = 0;
@@ -71,19 +73,28 @@ public class PongGame extends JComponent implements ActionListener,
         //paddle
         g.setColor(Color.WHITE);
         g.fillRect(paddleX, paddleY, 20, 300);
-        //draw ball
+        //ball
         g.setColor(Color.WHITE);
         g.fillOval(ballX, ballY, 75, 75);
-        
-        
+        //hits
+        g.setFont(new Font("TimesRoman", Font.BOLD, 40));
+        g.drawString("Hits: ", 1300, 100);
+        String hitsString = Integer.toString(hits);
+        g.drawString(hitsString, 1500, 100);
+
         if(ballX < paddleX - 50) {
-            //g.drawImage(gameOver, 200, 400, null);
             g.drawImage(gameOver, 0,0,WINDOW_WIDTH,WINDOW_WIDTH, null);
             t.stop();
             isRunning = false;
+            isGameOver = true;
+        }
+        
+        if(isRunning == false && isGameOver == false) {
+            g.drawString("Press 'esc' to start", 200, 100);
         }
         
     }
+    
 
     @Override
     public void actionPerformed(ActionEvent ae) {
@@ -92,28 +103,33 @@ public class PongGame extends JComponent implements ActionListener,
             ballXSpeed = 10 + difficulty;
             ballYSpeed = -4;
             difficulty+=2;
+            hits++;
         }
         if(ballX < paddleX + 20 && (ballY >= paddleY + 40  && ballY < paddleY + 110)) {
             ballXSpeed = 10 + difficulty;
             ballYSpeed = 3;
             difficulty+=2;
+            hits++;
         }
         
         if(ballX < paddleX + 20 && (ballY >= paddleY + 110 && ballY < paddleY + 190)) {
             ballXSpeed = 10 + difficulty;
             ballYSpeed = 2;
             difficulty+=2;
+            hits++;
         }
         if(ballX < paddleX + 20 && (ballY >= paddleY + 190 && ballY < paddleY + 260)) {
             ballXSpeed = 10 + difficulty;
             ballYSpeed = -3;
             difficulty+=2;
+            hits++;
         }
         
         if(ballX < paddleX + 20 && (ballY >= paddleY + 260 && ballY < paddleY + 300)) {
             ballXSpeed = 10 + difficulty;
             ballYSpeed = 4;
             difficulty+=2;
+            hits++;
         }
         
         if(ballY <= 0) {
@@ -130,7 +146,6 @@ public class PongGame extends JComponent implements ActionListener,
         ballX += ballXSpeed;
         ballY += ballYSpeed; 
         
-        System.out.println(difficulty);
         repaint();
     }
 
