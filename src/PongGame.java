@@ -84,6 +84,8 @@ public class PongGame extends JComponent implements ActionListener,
 
         if(ballX < paddleX - 50) {
             g.drawImage(gameOver, 0,0,WINDOW_WIDTH,WINDOW_WIDTH, null);
+            g.drawString("Hits: ", 1300, 100);
+            g.drawString(hitsString, 1500, 100);
             t.stop();
             isRunning = false;
             isGameOver = true;
@@ -91,6 +93,7 @@ public class PongGame extends JComponent implements ActionListener,
         
         if(isRunning == false && isGameOver == false) {
             g.drawString("Press 'esc' to start", 200, 100);
+            g.drawString("Press 'r' to restart", 200, 200);
         }
         
     }
@@ -167,6 +170,15 @@ public class PongGame extends JComponent implements ActionListener,
         }
         if(ke.getKeyCode() == KeyEvent.VK_ESCAPE && isRunning == true) {
             t.start();
+        }
+        
+        // restart 
+        if(ke.getKeyCode() == KeyEvent.VK_R && isRunning == false) {
+            hits = 0;
+            difficulty = 0;
+            ballX = 1600;
+            ballY = 800;
+            repaint();
         }
     }
 
